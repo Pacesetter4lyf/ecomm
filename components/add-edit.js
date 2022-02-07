@@ -3,16 +3,14 @@ import getDate from '../utils/get_date';
 import InvoiceContext from '../context/invoice-context';
 import { useRouter } from 'next/router';
 
-export default function AddEdit({ action, id, data , saveInvoice}) {
-    const [invoice, setInvoice] = useState(data)
+export default function AddEdit({ saveInvoice}) {
+    // const [invoice, setInvoice] = useState(data)
 
-    const { invoiceList, setInvoiceList } = useContext(InvoiceContext)
-
+    const { invoice, setInvoice, invoiceList, setInvoiceList } = useContext(InvoiceContext)
     const router = useRouter()
 
     const tax_type = invoice.tax.type;
     const discount_type = invoice.discount.type;
-
 
 
     const performAction = async () => {
@@ -39,7 +37,7 @@ export default function AddEdit({ action, id, data , saveInvoice}) {
         const { name, value } = e.target
 
         if (type === "tax" || type === "discount") {
-            setInvoice({ ...invoice, [type]: { ...invoice[type], ["rate"]: e.target.value } })
+            setInvoice({ ...invoice, [type]: { ...invoice[type], ["rate"]: e.target.value }      })
         } else {
             setInvoice({ ...invoice, [name]: value })
             // setInvoice({ ...invoice, [e.target.name]: e.target.value })

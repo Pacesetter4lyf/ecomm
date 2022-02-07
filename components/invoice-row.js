@@ -6,7 +6,7 @@ import InvoiceContext from '../context/invoice-context';
 
 export default function InvoiceRow({ invoice }) {
     const { id, bill_name, bill_email, date, total, status } = invoice
-    console.log(invoice);
+    // console.log(invoice);
     const router = useRouter()
 
 

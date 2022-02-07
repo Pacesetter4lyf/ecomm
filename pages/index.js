@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import Script from 'next/script'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import InvoiceHeader from '../components/invoice-header'
 import InvoiceTable from '../components/invoice-table'
 import ListActionBar from '../components/list-actionbar'
@@ -27,7 +27,7 @@ import InvoiceContext from '../context/invoice-context'
 
 export async function getServerSideProps(context) {
   const res = await fetch('http://localhost:3005/invoices/');
-  const invoices= await res.json()
+  const invoices = await res.json()
   return {
     props: {
       invoiceList: invoices
@@ -40,26 +40,32 @@ export async function getServerSideProps(context) {
 
 export default function Home(props) {
 
- console.log("PROPS INVOICE LIST   ", props.invoiceList);
+  console.log("PROPS INVOICE LIST   ", props.invoiceList);
 
   const { invoiceList, setInvoiceList } = useContext(InvoiceContext);
+  const [pagintedData, setPagintedData] = useState([]);
   // localStorage.setItem("invoiceList", "hello")
 
 
 
-  // if(invoiceList.length === 0){
-  //   setInvoiceList(props.invoiceList)
-  // }
+  var size = 2;
+  useEffect(() => {
+    let paginated_invoices = []
+    for (let i = 0; i < props.invoiceList.length; i += size) {
+      paginated_invoices.push(props.invoiceList.slice(i, i + size));
+    }
+    setPagintedData(paginated_invoices)
+    console.log(paginated_invoices);
+    setInvoiceList(pagintedData[0])
+  }, []);
 
+  let invoices_10 = [...props.invoiceList];
+  invoices_10.length = invoices_10.length >= 2 ? 2 : invoices_10.length
 
 
   return (
     <>
-      {/* <Script strategy = "lazyOnLoad" src= "../node_modules/bootstrap/dist/js/bootstrap.js"/> */}
-
       <div className="main-container" id="container">
-        {/* <div className="overlay" />
-  <div className="search-overlay" /> */}
         {/*  BEGIN CONTENT AREA  */}
         <div id="content" className="main-content">
           <div className="layout-px-spacing">
@@ -72,10 +78,9 @@ export default function Home(props) {
 
                     <ListActionBar />
 
-                    <InvoiceTable invoiceList = {props.invoiceList}/>
-
-
-                    <ListPager />
+                    <InvoiceTable invoiceList={invoiceList?.length > 0 && invoiceList || invoices_10} />
+                    
+                    <ListPager list={pagintedData} />
                   </div>
                 </div>
               </div>

@@ -22,14 +22,14 @@ export default function Edit({ invoice }) {
             body: JSON.stringify(invoice)
         })
         .then(data => data.json())
-        .then(data => console.log("The response is ", data));
-        console.log("invoice edited")
+        // .then(data => console.log("The response is ", data));
+        // console.log("invoice edited")
     }
 
 
     return (
         <>
-            <AddEdit action={"edit"} data={invoice}  saveInvoice  = { saveInvoice } />
+            <AddEdit saveInvoice  = { saveInvoice } />
         </>
     );
 }
@@ -41,7 +41,7 @@ export async function getServerSideProps({ params }) {
     let invoice = await fetch(`http://localhost:3005/invoices/${params.id}`)
     invoice = await invoice.json()
 
-    console.log("inv  ", invoice);
+    // console.log("inv  ", invoice);
     return {
         props: {
             invoice
